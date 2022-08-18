@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import {
   Advertisement,
@@ -10,6 +10,7 @@ import { AdvertisementFindDto } from './dto/advertisementFind.dto';
 
 @Injectable()
 export class AdvertisementService {
+  private readonly logger: Logger = new Logger(AdvertisementService.name);
   constructor(
     @InjectModel(Advertisement.name)
     private advertisementModel: Model<AdvertisementDocument>,
@@ -17,6 +18,7 @@ export class AdvertisementService {
 
   find(params: AdvertisementFindDto): Promise<Advertisement[]> {
     const { shortText, description, userId, tags } = params;
+    Logger.debug('find');
     return this.advertisementModel
       .find({
         isDeleted: false,
@@ -33,10 +35,12 @@ export class AdvertisementService {
   ): Promise<Advertisement> {
     const createdAdvertisement: AdvertisementDocument =
       new this.advertisementModel(advertisementCreateDto);
+    Logger.debug('create');
     return createdAdvertisement.save();
   }
 
   remove(id: string): void {
+    Logger.debug('remove');
     this.advertisementModel.findByIdAndUpdate(id, {
       $set: {
         isDeleted: true,
@@ -45,6 +49,7 @@ export class AdvertisementService {
   }
 
   findById(id: string): Promise<Advertisement> {
+    Logger.debug('findById');
     return this.advertisementModel.findById(id).exec();
   }
 }
