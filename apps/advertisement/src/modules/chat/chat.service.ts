@@ -5,10 +5,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User } from 'apps/advertisement/src/database/schemas/user.schema';
 import { SendChatDto } from './dto/sendChat.dto';
 import { Message, MessageDocument } from 'apps/advertisement/src/database/schemas/message.schema';
+import EventEmitter from 'events';
 
 @Injectable()
 export class ChatService {
   private readonly logger: Logger = new Logger(ChatService.name);
+  private readonly sendMessageEvent: EventEmitter = new EventEmitter();
+
   constructor(
     @InjectModel(Chat.name)
     private chatModel: Model<ChatDocument>,
@@ -38,12 +41,21 @@ export class ChatService {
     }
     chat.messages.push(message);
     await chat.save();
-    // TODO: send emit 'send-message'
+    this.sendMessageEvent.emit('send-message', {
+      chatId: chat.id,
+      message,
+    });
     return message;
   }
 
   async getHistory(id: string): Promise<Message[]> {
     this.logger.debug('getHistory');
     return this.chatModel.findById(id, 'messages');
+  }
+
+  subscribe(cb: any): void {
+    this.sendMessageEvent.on('send-message', (args) => {
+      cb(args);
+    });
   }
 }
