@@ -6,6 +6,7 @@ import { User } from 'apps/advertisement/src/database/schemas/user.schema';
 import { SendChatDto } from './dto/sendChat.dto';
 import { Message, MessageDocument } from 'apps/advertisement/src/database/schemas/message.schema';
 import * as EventEmitter from 'events';
+import { OnEvent } from '@nestjs/event-emitter';
 
 @Injectable()
 export class ChatService {
@@ -18,6 +19,12 @@ export class ChatService {
     @InjectModel(Message.name)
     private messageModel: Model<MessageDocument>,
   ) {}
+
+  @OnEvent('test')
+  handleEvent(event: any) {
+    this.logger.debug('handleEvent');
+    console.log(event);
+  }
 
   async find(users: User[]): Promise<Chat> {
     this.logger.debug('find');
