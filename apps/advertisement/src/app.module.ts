@@ -13,7 +13,7 @@ import { AuthModule } from './auth/auth.module';
     ConfigModule.forRoot({
       load: [configuration],
     }),
-    MongooseModule.forRoot('mongodb://localhost/test'),
+    MongooseModule.forRoot('mongodb://localhost/sample'),
     // My modules:
     UserModule,
     AuthModule,
