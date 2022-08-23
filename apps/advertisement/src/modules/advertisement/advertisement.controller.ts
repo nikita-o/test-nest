@@ -4,7 +4,9 @@ import { Advertisement } from '../../database/schemas/advertisement.schema';
 import { AdvertisementCreateDto } from './dto/advertisementCreate.dto';
 import { AdvertisementFindDto } from './dto/advertisementFind.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('advertisement')
 @Controller('advertisement')
 export class AdvertisementController {
   constructor(private advertisementService: AdvertisementService) {}

@@ -3,7 +3,9 @@ import { AppService } from './app.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { createReadStream } from 'fs';
 import { join } from 'path';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('main')
 @Controller()
 export class AppController {
   //private readonly logger = new Logger(AppController.name);
