@@ -5,12 +5,12 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User } from 'apps/advertisement/src/database/schemas/user.schema';
 import { SendChatDto } from './dto/sendChat.dto';
 import { Message, MessageDocument } from 'apps/advertisement/src/database/schemas/message.schema';
-import EventEmitter from 'events';
+import * as EventEmitter from 'events';
 
 @Injectable()
 export class ChatService {
   private readonly logger: Logger = new Logger(ChatService.name);
-  private readonly sendMessageEvent: EventEmitter = new EventEmitter();
+  private sendMessageEvent: EventEmitter = new EventEmitter();
 
   constructor(
     @InjectModel(Chat.name)
