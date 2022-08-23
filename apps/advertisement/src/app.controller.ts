@@ -1,5 +1,8 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post, Res, StreamableFile, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { AppService } from './app.service';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { createReadStream } from 'fs';
+import { join } from 'path';
 
 @Controller()
 export class AppController {
@@ -9,5 +12,20 @@ export class AppController {
   @Get()
   getHello(): string {
     return this.appService.getHello();
+  }
+
+  @Post()
+  @UseInterceptors(FilesInterceptor('images'))
+  testik(
+    @UploadedFiles() files: Array<Express.Multer.File>,
+  ) {
+    console.log(files);
+    return true;
+  }
+
+  @Get('get_file')
+  getFile(): StreamableFile {
+    const file = createReadStream(join(process.cwd(), 'package.json'));
+    return new StreamableFile(file);
   }
 }

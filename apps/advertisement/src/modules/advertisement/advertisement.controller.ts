@@ -1,8 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { AdvertisementService } from './advertisement.service';
 import { Advertisement } from '../../database/schemas/advertisement.schema';
 import { AdvertisementCreateDto } from './dto/advertisementCreate.dto';
 import { AdvertisementFindDto } from './dto/advertisementFind.dto';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('advertisement')
 export class AdvertisementController {
@@ -19,7 +20,12 @@ export class AdvertisementController {
   }
 
   @Post()
-  async create(@Body() advertisement: AdvertisementCreateDto): Promise<Advertisement> {
+  @UseInterceptors(FilesInterceptor('images'))
+  async create(
+    @Body() advertisement: AdvertisementCreateDto,
+    @UploadedFiles() files: Array<Express.Multer.File>,
+  ): Promise<Advertisement> {
+    console.log(files);
     return await this.advertisementService.create(advertisement);
   }
 

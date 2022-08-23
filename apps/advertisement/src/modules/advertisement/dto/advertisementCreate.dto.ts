@@ -7,6 +7,7 @@ export class AdvertisementCreateDto {
   description: string;
   @IsString()
   userId: string;
+
   @IsString({ each: true })
   tags!: string[];
 }
